@@ -1,0 +1,76 @@
+task 1
+import json
+
+# JSON verisini içeren dosyayı aç
+with open('forecast.json') as f:
+    data = json.load(f)
+
+# İstenen zamanı belirle
+target_time = "2024-06-10T04:00"
+
+# hourly zaman dilimindeki sıcaklık verilerini bulma
+times = data["hourly"]["time"]
+temperatures = data["hourly"]["temperature_2m"]
+
+# İstenen zaman dilimindeki sıcaklığı bulma
+temperature_at_target_time = None
+if target_time in times:
+    index = times.index(target_time)
+    temperature_at_target_time = temperatures[index]
+
+print(f'Temperature at {target_time}: {temperature_at_target_time}')
+
+task2 
+from bs4 import BeautifulSoup
+
+# HTML dosyasını aç ve BeautifulSoup ile parse et
+with open('phases_soften.html') as f:
+    soup = BeautifulSoup(f, 'html.parser')
+
+# Phases listesi
+phases = ["Deployment", "Development", "Monitoring", "Testing"]
+
+# Her bir fazın başlığını ve ilk paragrafını çıkar
+for phase in phases:
+    title_element = soup.find(lambda tag: tag.name == "h2" and phase in tag.text)
+    if title_element:
+        # Başlık ve paragrafı bulma
+        title = title_element.text
+        paragraph = title_element.find_next("p").text
+        print(f'{title}\n{paragraph}\n')
+task3 
+import pandas as pd
+
+# CSV dosyasını oku
+data = pd.read_csv('covid_19_clean.csv')
+
+# 1. Görev: 1 Haziran 2020 tarihindeki toplam ölüm sayısını bul
+total_deaths = data[data['Date'] == '2020-06-01']['Deaths'].sum()
+print(f'Total deaths on 2020-06-01: {total_deaths}')
+
+# 2. Görev: Western Pacific ülkelerinin doğrulanan vaka sayısını bul ve karşılaştır
+western_pacific_countries = data[(data['WHO Region'] == 'Western Pacific') & (data['Date'] == '2020-06-01')]
+mean_confirmed_cases = data[data['Date'] == '2020-06-01']['Confirmed'].mean()
+
+higher_confirmed_cases = western_pacific_countries[western_pacific_countries['Confirmed'] > mean_confirmed_cases]
+print('Western Pacific countries with confirmed cases higher than the mean:')
+print(higher_confirmed_cases[['Country', 'Confirmed']])
+task4
+import unittest
+from cnst import cnst
+
+class TestBuiltins(unittest.TestCase):
+    def test_cnst(self):
+        for i in range(-10, 11):  # -10'dan 10'a kadar sayılarla test et
+            self.assertEqual(cnst(i), i)
+
+if __name__ == '__main__':
+    unittest.main()
+Testleri Çalıştırma
+Test dosyasını terminalden çalıştırmak için şu komutları kullanın:
+
+# Test dosyasının bulunduğu dizine gidin
+cd /path/to/your/script
+
+# Testleri çalıştırın
+python -m unittest test_cnst.py
